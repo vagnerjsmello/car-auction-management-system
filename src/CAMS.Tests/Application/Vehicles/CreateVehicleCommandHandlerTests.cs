@@ -1,5 +1,6 @@
-﻿using BCA.CarManagement.Application.Commands.Vehicles.CreateVehicles;
+﻿using CAMS.Application.Commands.Vehicles.CreateVehicle;
 using CAMS.Domain.Entities;
+using CAMS.Domain.Enums;
 using CAMS.Domain.Exceptions;
 using CAMS.Domain.Repositories;
 using FluentAssertions;
@@ -114,8 +115,8 @@ namespace CAMS.Tests.Application.Vehicles
             {
                 Id = Guid.NewGuid(),
                 VehicleType = VehicleType.Sedan,
-                Manufacturer = "Toyota",
-                Model = "Camry",
+                Manufacturer = "Hyundai",
+                Model = "Bayon",
                 Year = 2022,
                 StartingBid = 15000m,
                 NumberOfDoors = 4
@@ -133,8 +134,8 @@ namespace CAMS.Tests.Application.Vehicles
             result.Should().NotBeNull("because a valid vehicle should be created");
             result.Id.Should().Be(command.Id);
             result.VehicleType.Should().Be(VehicleType.Sedan);
-            result.Manufacturer.Should().Be("Toyota");
-            result.Model.Should().Be("Camry");
+            result.Manufacturer.Should().Be("Hyundai");
+            result.Model.Should().Be("Bayon");
             result.Year.Should().Be(2022);
             result.NumberOfDoors.Should().Be(4);
 
@@ -190,8 +191,8 @@ namespace CAMS.Tests.Application.Vehicles
             {
                 Id = Guid.NewGuid(),
                 VehicleType = VehicleType.Sedan,
-                Manufacturer = "Toyota",
-                Model = "Camry",
+                Manufacturer = "Hyundai",
+                Model = "Bayon",
                 Year = 2022,
                 StartingBid = 15000m,
                 NumberOfDoors = 4
@@ -220,15 +221,15 @@ namespace CAMS.Tests.Application.Vehicles
         private CreateVehicleCommandValidator GetRealValidator() => new CreateVehicleCommandValidator();
 
         [Fact]
-        public void Validator_Should_Have_Error_When_Id_Is_Empty()
+        public void Validator_ShouldHaveError_WhenIdIsEmpty()
         {
             // Arrange
             var request = new CreateVehicleRequest
             {
                 Id = Guid.Empty,
                 VehicleType = VehicleType.Sedan,
-                Manufacturer = "Test",
-                Model = "Test",
+                Manufacturer = "Hyundai",
+                Model = "i20",
                 Year = 2022,
                 StartingBid = 10000m,
                 NumberOfDoors = 4
@@ -241,7 +242,7 @@ namespace CAMS.Tests.Application.Vehicles
         }
 
         [Fact]
-        public void Validator_Should_Have_Error_When_Manufacturer_Is_Empty()
+        public void Validator_ShouldHaveError_WhenManufacturerIsEmpty()
         {
             // Arrange
             var request = new CreateVehicleRequest
@@ -249,7 +250,7 @@ namespace CAMS.Tests.Application.Vehicles
                 Id = Guid.NewGuid(),
                 VehicleType = VehicleType.Sedan,
                 Manufacturer = "",
-                Model = "Test",
+                Model = "i20",
                 Year = 2022,
                 StartingBid = 10000m,
                 NumberOfDoors = 4
@@ -262,14 +263,14 @@ namespace CAMS.Tests.Application.Vehicles
         }
 
         [Fact]
-        public void Validator_Should_Have_Error_When_Model_Is_Empty()
+        public void Validator_ShouldHaveError_WhenModelIsEmpty()
         {
             // Arrange
             var request = new CreateVehicleRequest
             {
                 Id = Guid.NewGuid(),
                 VehicleType = VehicleType.Sedan,
-                Manufacturer = "Test",
+                Manufacturer = "Hyundai",
                 Model = "",
                 Year = 2022,
                 StartingBid = 10000m,
@@ -283,15 +284,15 @@ namespace CAMS.Tests.Application.Vehicles
         }
 
         [Fact]
-        public void Validator_Should_Have_Error_When_Year_Is_Less_Than_1900()
+        public void Validator_ShouldHaveError_WhenYearIsLessThan1900()
         {
             // Arrange
             var request = new CreateVehicleRequest
             {
                 Id = Guid.NewGuid(),
                 VehicleType = VehicleType.Sedan,
-                Manufacturer = "Test",
-                Model = "Test",
+                Manufacturer = "Hyundai",
+                Model = "i20",
                 Year = 1890,
                 StartingBid = 10000m,
                 NumberOfDoors = 4
@@ -304,15 +305,15 @@ namespace CAMS.Tests.Application.Vehicles
         }
 
         [Fact]
-        public void Validator_Should_Have_Error_When_StartingBid_Is_Negative()
+        public void Validator_ShouldHaveError_WhenStartingBidIsNegative()
         {
             // Arrange
             var request = new CreateVehicleRequest
             {
                 Id = Guid.NewGuid(),
                 VehicleType = VehicleType.Sedan,
-                Manufacturer = "Test",
-                Model = "Test",
+                Manufacturer = "Hyundai",
+                Model = "i20",
                 Year = 2022,
                 StartingBid = -1,
                 NumberOfDoors = 4
@@ -325,15 +326,15 @@ namespace CAMS.Tests.Application.Vehicles
         }
 
         [Fact]
-        public void Validator_Should_Have_Error_When_NumberOfDoors_Is_Invalid_For_Sedan()
+        public void Validator_ShouldHaveError_WhenNumberOfDoorsIsInvalidForSedan()
         {
             // Arrange
             var request = new CreateVehicleRequest
             {
                 Id = Guid.NewGuid(),
                 VehicleType = VehicleType.Sedan,
-                Manufacturer = "Test",
-                Model = "Test",
+                Manufacturer = "Hyundai",
+                Model = "i20",
                 Year = 2022,
                 StartingBid = 10000m,
                 NumberOfDoors = 0  // Invalid value
@@ -346,15 +347,15 @@ namespace CAMS.Tests.Application.Vehicles
         }
 
         [Fact]
-        public void Validator_Should_Not_Have_Error_When_All_Fields_Are_Valid_For_Sedan()
+        public void Validator_ShouldNotHaveError_WhenAllFieldsAreValidForSedan()
         {
             // Arrange
             var request = new CreateVehicleRequest
             {
                 Id = Guid.NewGuid(),
                 VehicleType = VehicleType.Sedan,
-                Manufacturer = "Toyota",
-                Model = "Camry",
+                Manufacturer = "Hyundai",
+                Model = "Bayon",
                 Year = 2022,
                 StartingBid = 15000m,
                 NumberOfDoors = 4

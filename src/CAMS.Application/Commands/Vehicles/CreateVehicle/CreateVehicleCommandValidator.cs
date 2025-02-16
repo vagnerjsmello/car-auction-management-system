@@ -1,7 +1,7 @@
-﻿using CAMS.Domain.Entities;
+﻿using CAMS.Domain.Enums;
 using FluentValidation;
 
-namespace BCA.CarManagement.Application.Commands.Vehicles.CreateVehicles;
+namespace CAMS.Application.Commands.Vehicles.CreateVehicle;
 
 /// <summary>
 /// Validator for the CreateVehicleCommand ensuring that all required fields are valid.

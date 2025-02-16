@@ -1,6 +1,7 @@
 ﻿using CAMS.Domain.Entities;
+using CAMS.Domain.Enums;
 
-namespace BCA.CarManagement.Application.Commands.Vehicles.CreateVehicles;
+namespace CAMS.Application.Commands.Vehicles.CreateVehicle;
 
 /// <summary>
 /// Represents the response returned after a vehicle is created.
@@ -20,14 +21,14 @@ public class CreateVehicleResponse
 
     public CreateVehicleResponse(Vehicle vehicle)
     {
-        
-        Id = vehicle.Id;        
+
+        Id = vehicle.Id;
         VehicleType = vehicle.Type;
         Manufacturer = vehicle.Manufacturer;
         Model = vehicle.Model;
         Year = vehicle.Year;
         StartingBid = vehicle.StartingBid;
-        
+
         // If Sedan or Hatchback, extract its NumberOfDoors;
         NumberOfDoors = vehicle switch
         {
@@ -38,7 +39,7 @@ public class CreateVehicleResponse
 
         // If SUV, extract its NumberOfSeats; 
         NumberOfSeats = vehicle is SUV suv ? suv.NumberOfSeats : default;
-        
+
         // If Truck, extract its LoadCapacity; 
         LoadCapacity = vehicle is Truck truck ? truck.LoadCapacity : default;
 

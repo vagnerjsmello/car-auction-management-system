@@ -1,36 +1,35 @@
 ﻿using CAMS.Domain.Entities;
 using CAMS.Domain.Exceptions;
 using CAMS.Domain.Repositories;
+using System.Collections.Concurrent;
 
-namespace CAMS.Infrastructure.Repositories
+namespace CAMS.Infrastructure.Repositories;
+
+/// <summary>
+/// In-memory implementation of IVehicleRepository.
+/// </summary>
+public class InMemoryVehicleRepository : IVehicleRepository
 {
-    public class InMemoryVehicleRepository : IVehicleRepository
+    private readonly ConcurrentDictionary<Guid, Vehicle> _vehicles = new ConcurrentDictionary<Guid, Vehicle>();
+
+    public async Task AddAsync(Vehicle vehicle)
     {
-        private readonly List<Vehicle> _vehicles = new List<Vehicle>();
-
-        public async Task AddAsync(Vehicle vehicle)
+        if (!_vehicles.TryAdd(vehicle.Id, vehicle))
         {
-            if (_vehicles.Any(v => v.Id == vehicle.Id))
-            {
-                throw new VehicleAlreadyExistsException($"A vehicle with id {vehicle.Id} already exists.");
-            }
-            _vehicles.Add(vehicle);
-            await Task.CompletedTask;
+            throw new VehicleAlreadyExistsException($"Vehicle with id {vehicle.Id} already exists.");
         }
+        await Task.CompletedTask;
+    }
 
-        public async Task<Vehicle> GetByIdAsync(Guid id)
-        {
-            var vehicle = _vehicles.FirstOrDefault(v => v.Id == id);
-            if (vehicle == null)
-            {
-                throw new VehicleNotFoundException($"Vehicle with id {id} not found.");
-            }
-            return await Task.FromResult(vehicle);
-        }
+    public async Task<Vehicle?> GetByIdAsync(Guid id)
+    {
+        _vehicles.TryGetValue(id, out var vehicle);
+        return await Task.FromResult(vehicle);
+    }
 
-        public async Task<IEnumerable<Vehicle>> Search(Func<Vehicle, bool> predicate)
-        {
-            return await Task.FromResult(_vehicles.Where(predicate));
-        }
+    public async Task<IEnumerable<Vehicle>> Search(Func<Vehicle, bool> predicate)
+    {
+        var result = _vehicles.Values.Where(predicate);
+        return await Task.FromResult(result);
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace CAMS.Domain.Entities;
+﻿using CAMS.Domain.Enums;
+
+namespace CAMS.Domain.Entities;
 
 /// <summary>
 /// Represents a Sedan vehicle with a specified number of seats.

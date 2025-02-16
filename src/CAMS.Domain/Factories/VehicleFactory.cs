@@ -1,4 +1,5 @@
 ﻿using CAMS.Domain.Entities;
+using CAMS.Domain.Enums;
 
 namespace CAMS.Domain.Factories;
 

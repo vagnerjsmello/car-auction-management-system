@@ -1,7 +1,7 @@
-﻿using CAMS.Domain.Entities;
+﻿using CAMS.Domain.Enums;
 using MediatR;
 
-namespace BCA.CarManagement.Application.Commands.Vehicles.CreateVehicles;
+namespace CAMS.Application.Commands.Vehicles.CreateVehicle;
 
 /// <summary>
 /// Command that triggers the creation of a vehicle.

@@ -1,6 +1,6 @@
-﻿using CAMS.Domain.Entities;
+﻿using CAMS.Domain.Enums;
 
-namespace BCA.CarManagement.Application.Queries.Vehicles.SearchVehicles;
+namespace CAMS.Application.Queries.Vehicles.SearchVehicle;
 
 /// <summary>
 /// Query object for searching vehicles using optional filters.

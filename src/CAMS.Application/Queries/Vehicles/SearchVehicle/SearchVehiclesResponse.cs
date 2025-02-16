@@ -1,6 +1,6 @@
 ﻿using CAMS.Domain.Entities;
 
-namespace BCA.CarManagement.Application.Queries.Vehicles.SearchVehicles;
+namespace CAMS.Application.Queries.Vehicles.SearchVehicle;
 
 /// <summary>
 /// Represents the response containing the list of vehicles returned from a search operation.

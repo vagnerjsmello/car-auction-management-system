@@ -1,4 +1,5 @@
 ﻿using CAMS.Domain.Entities;
+using CAMS.Domain.Enums;
 using CAMS.Domain.Factories;
 using FluentAssertions;
 
@@ -36,15 +37,14 @@ public class VehicleFactoryTests
             numberOfSeats,
             loadCapacity);
 
-        // Assert: atributos comuns
+        // Assert
         vehicle.Should().NotBeNull();
         vehicle.Id.Should().Be(uniqueId);
         vehicle.Manufacturer.Should().Be(manufacturer);
         vehicle.Model.Should().Be(model);
         vehicle.Year.Should().Be(year);
         vehicle.StartingBid.Should().Be(startingBid);
-
-        // Assert: validação do tipo específico e atributo relacionado
+        
         switch (vehicleType)
         {
             case VehicleType.Hatchback:
@@ -113,8 +113,8 @@ public class VehicleFactoryTests
     {
         // Arrange
         var id = Guid.NewGuid();
-        string manufacturer = "Toyota";
-        string model = "Yaris";
+        string manufacturer = "Hyundai";
+        string model = "Bayon";
         int year = 2022;
         decimal startingBid = 15000m;
         int invalidNumberOfDoors = 0; // Invalid value
@@ -132,8 +132,8 @@ public class VehicleFactoryTests
     {
         // Arrange
         var id = Guid.NewGuid();
-        string manufacturer = "Toyota";
-        string model = "RAV4";
+        string manufacturer = "Hyundai";
+        string model = "i20";
         int year = 2022;
         decimal startingBid = 30000m;
         int invalidNumberOfSeats = 0; // Invalid value

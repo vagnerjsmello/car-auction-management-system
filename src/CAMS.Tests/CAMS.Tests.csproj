@@ -25,6 +25,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="coverlet.collector" Version="3.*" />
+  </ItemGroup>
+
+
+  <ItemGroup>
     <ProjectReference Include="..\CAMS.Application\CAMS.Application.csproj" />
     <ProjectReference Include="..\CAMS.Domain\CAMS.Domain.csproj" />
     <ProjectReference Include="..\CAMS.Infrastructure\CAMS.Infrastructure.csproj" />

@@ -6,7 +6,7 @@ using FluentValidation;
 using FluentValidation.Results;
 using MediatR;
 
-namespace BCA.CarManagement.Application.Commands.Vehicles.CreateVehicles;
+namespace CAMS.Application.Commands.Vehicles.CreateVehicle;
 
 /// <summary>
 /// Handler responsible for processing the creation of a vehicle command.
@@ -19,7 +19,7 @@ public class CreateVehicleCommandHandler : IRequestHandler<CreateVehicleCommand,
 
     public CreateVehicleCommandHandler(
         ILogger<CreateVehicleCommandHandler> logger,
-        IVehicleRepository vehicleRepository, 
+        IVehicleRepository vehicleRepository,
         IValidator<CreateVehicleCommand> validator)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -38,9 +38,9 @@ public class CreateVehicleCommandHandler : IRequestHandler<CreateVehicleCommand,
             _logger.LogWarning("Validation failed for CreateVehicleCommand: {Errors}", validationResult.Errors);
             throw new ValidationException(validationResult.Errors);
         }
-        
+
         // Check for duplicate vehicle
-        var vehicle = await _vehicleRepository.GetByIdAsync(command.Id);        
+        var vehicle = await _vehicleRepository.GetByIdAsync(command.Id);
         if (vehicle is not null)
         {
             _logger.LogWarning("Vehicle with ID {VehicleId} already exists.", command.Id);

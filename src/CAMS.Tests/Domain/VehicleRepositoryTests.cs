@@ -1,4 +1,5 @@
 ﻿using CAMS.Domain.Entities;
+using CAMS.Domain.Enums;
 using CAMS.Domain.Exceptions;
 using CAMS.Domain.Repositories;
 using CAMS.Infrastructure.Repositories;
@@ -6,6 +7,9 @@ using FluentAssertions;
 
 namespace CAMS.Tests.Domain
 {
+    /// <summary>
+    /// Unit tests for the in-memory implementation of IVehicleRepository.
+    /// </summary>
     public class VehicleRepositoryTests
     {
         private readonly IVehicleRepository _repository;
@@ -19,7 +23,7 @@ namespace CAMS.Tests.Domain
         public async Task AddVehicle_ShouldAddVehicleSuccessfully()
         {
             // Arrange
-            var vehicle = new Hatchback(Guid.NewGuid(), "Toyota", "Corolla", 2020, 15000m, 4);
+            var vehicle = new Hatchback(Guid.NewGuid(), "Hyundai", "Bayon", 2020, 15000m, 4);
 
             // Act
             await _repository.AddAsync(vehicle);
@@ -27,8 +31,8 @@ namespace CAMS.Tests.Domain
 
             // Assert
             result.Should().NotBeNull();
-            result.Manufacturer.Should().Be("Toyota");
-            result.Model.Should().Be("Corolla");
+            result.Manufacturer.Should().Be("Hyundai");
+            result.Model.Should().Be("Bayon");
             result.Year.Should().Be(2020);
             result.StartingBid.Should().Be(15000m);
         }
@@ -39,7 +43,7 @@ namespace CAMS.Tests.Domain
             // Arrange
             var id = Guid.NewGuid();
             var sedan1 = new Sedan(id, "Honda", "Accord", 2021, 20000m, 4);
-            var sedan2 = new Sedan(id, "Toyota", "Camry", 2022, 25000m, 4);
+            var sedan2 = new Sedan(id, "Hyundai", "i20", 2022, 25000m, 4);
 
             await _repository.AddAsync(sedan1);
 
@@ -55,7 +59,7 @@ namespace CAMS.Tests.Domain
         {
             // Arrange
             var hatchback = new Hatchback(Guid.NewGuid(), "Ford", "Fiesta", 2020, 10000m, 4);
-            var sedan = new Sedan(Guid.NewGuid(), "Toyota", "Camry", 2021, 15000m, 4);
+            var sedan = new Sedan(Guid.NewGuid(), "Hyundai", "i20", 2021, 15000m, 4);
             var suv = new SUV(Guid.NewGuid(), "Honda", "CRV", 2020, 20000m, 5);
 
             await _repository.AddAsync(hatchback);
@@ -64,13 +68,13 @@ namespace CAMS.Tests.Domain
 
             // Act
             var results = await _repository.Search(v =>
-                v.Manufacturer.Equals("Toyota", StringComparison.OrdinalIgnoreCase));
+                v.Manufacturer.Equals("Hyundai", StringComparison.OrdinalIgnoreCase));
 
             // Assert
             results.Should().ContainSingle();
             var vehicleFound = results.First();
-            vehicleFound.Model.Should().Be("Camry");
-            vehicleFound.Manufacturer.Should().Be("Toyota");
+            vehicleFound.Model.Should().Be("i20");
+            vehicleFound.Manufacturer.Should().Be("Hyundai");
         }
 
         [Fact]
@@ -78,7 +82,7 @@ namespace CAMS.Tests.Domain
         {
             // Arrange
             var hatchback = new Hatchback(Guid.NewGuid(), "Ford", "Fiesta", 2020, 10000m, 4);
-            var sedan = new Sedan(Guid.NewGuid(), "Toyota", "Camry", 2021, 15000m, 4);
+            var sedan = new Sedan(Guid.NewGuid(), "Hyundai", "i20", 2021, 15000m, 4);
             var suv = new SUV(Guid.NewGuid(), "Honda", "CRV", 2020, 20000m, 5);
 
             await _repository.AddAsync(hatchback);
@@ -96,22 +100,21 @@ namespace CAMS.Tests.Domain
         public async Task SearchVehicles_ShouldReturnVehiclesMatchingMultipleCriteria()
         {
             // Arrange
-            var sedanCamry = new Sedan(Guid.NewGuid(), "Toyota", "Camry", 2021, 15000m, 4);
-            var sedanCorolla = new Sedan(Guid.NewGuid(), "Toyota", "Corolla", 2021, 14000m, 4);
-            var hatchbackYaris = new Hatchback(Guid.NewGuid(), "Toyota", "Yaris", 2021, 12000m, 4);
+            var sedani20 = new Sedan(Guid.NewGuid(), "Hyundai", "i20", 2021, 15000m, 4);
+            var sedanBayon = new Sedan(Guid.NewGuid(), "Hyundai", "Bayon", 2021, 14000m, 4);
+            var hatchbackTucson = new Hatchback(Guid.NewGuid(), "Hyundai", "Tucson", 2021, 12000m, 4);
             var suv = new SUV(Guid.NewGuid(), "Honda", "CRV", 2020, 20000m, 5);
             var truck = new Truck(Guid.NewGuid(), "Ford", "F-150", 2021, 25000m, 10000);
 
-            // Add in memory
-            await _repository.AddAsync(sedanCamry);
-            await _repository.AddAsync(sedanCorolla);
-            await _repository.AddAsync(hatchbackYaris);
+            await _repository.AddAsync(sedani20);
+            await _repository.AddAsync(sedanBayon);
+            await _repository.AddAsync(hatchbackTucson);
             await _repository.AddAsync(suv);
             await _repository.AddAsync(truck);
 
-            // Act: Get "Toyota", 2021 year and Sedan type.
+            // Act
             var results = await _repository.Search(v =>
-                v.Manufacturer.Equals("Toyota", StringComparison.OrdinalIgnoreCase)
+                v.Manufacturer.Equals("Hyundai", StringComparison.OrdinalIgnoreCase)
                 && v.Year == 2021
                 && v.Type == VehicleType.Sedan);
 
@@ -119,7 +122,7 @@ namespace CAMS.Tests.Domain
             results.Should().HaveCount(2);
             results.Should()
                 .OnlyContain(v => v.Type == VehicleType.Sedan &&
-                    v.Manufacturer.Equals("Toyota", StringComparison.OrdinalIgnoreCase) &&
+                    v.Manufacturer.Equals("Hyundai", StringComparison.OrdinalIgnoreCase) &&
                     v.Year == 2021);
         }
 

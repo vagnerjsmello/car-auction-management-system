@@ -1,9 +1,8 @@
-﻿using BCA.CarManagement.Application.Queries.Vehicles.SearchVehicles;
-using CAMS.Domain.Repositories;
+﻿using CAMS.Domain.Repositories;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
-namespace CAMS.Application.Queries.Vehicles;
+namespace CAMS.Application.Queries.Vehicles.SearchVehicle;
 
 /// <summary>
 /// Handler responsible for processing vehicle search queries.
@@ -30,7 +29,7 @@ public class SearchVehiclesQueryHandler
                  || v.Manufacturer.Equals(query.Manufacturer, StringComparison.OrdinalIgnoreCase))
             && (string.IsNullOrEmpty(query.Model)
                  || v.Model.Equals(query.Model, StringComparison.OrdinalIgnoreCase))
-            && (!query.Year.HasValue || v.Year == query.Year.Value)        );
+            && (!query.Year.HasValue || v.Year == query.Year.Value));
 
         _logger.LogInformation("SearchVehiclesQuery returned {Count} vehicles.", vehicles.Count());
         var response = new SearchVehiclesResponse(vehicles);

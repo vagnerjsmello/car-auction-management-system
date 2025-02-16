@@ -1,8 +1,7 @@
-﻿using BCA.CarManagement.Application.Queries.Vehicles.SearchVehicles;
-using CAMS.Domain.Entities;
+﻿using CAMS.Domain.Enums;
 using MediatR;
 
-namespace CAMS.Application.Queries.Vehicles;
+namespace CAMS.Application.Queries.Vehicles.SearchVehicle;
 
 /// <summary>
 /// Query object for searching vehicles using optional filters.
@@ -16,9 +15,9 @@ public class SearchVehiclesQuery : IRequest<SearchVehiclesResponse>
 
     public SearchVehiclesQuery(SearchVehiclesRequest request)
     {
-        this.VehicleType = request.VehicleType;
-        this.Manufacturer = request.Manufacturer;
-        this.Model = request.Model;
-        this.Year = request.Year;
+        VehicleType = request.VehicleType;
+        Manufacturer = request.Manufacturer;
+        Model = request.Model;
+        Year = request.Year;
     }
 }

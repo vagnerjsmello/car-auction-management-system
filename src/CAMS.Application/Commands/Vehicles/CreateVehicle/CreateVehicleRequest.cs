@@ -1,6 +1,6 @@
-﻿using CAMS.Domain.Entities;
+﻿using CAMS.Domain.Enums;
 
-namespace BCA.CarManagement.Application.Commands.Vehicles.CreateVehicles;
+namespace CAMS.Application.Commands.Vehicles.CreateVehicle;
 
 /// <summary>
 /// Request DTO for creating a vehicle.

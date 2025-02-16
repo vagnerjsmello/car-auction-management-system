@@ -1,6 +1,6 @@
-﻿using BCA.CarManagement.Application.Queries.Vehicles.SearchVehicles;
-using CAMS.Application.Queries.Vehicles;
+﻿using CAMS.Application.Queries.Vehicles.SearchVehicle;
 using CAMS.Domain.Entities;
+using CAMS.Domain.Enums;
 using CAMS.Domain.Repositories;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
@@ -26,8 +26,8 @@ public class SearchVehiclesQueryHandlerTests
         // List of vehicles to simulate the repository data.
         _vehicles = new List<Vehicle>
         {
-            new Sedan(Guid.NewGuid(), "Toyota", "Camry", 2022, 15000m, 4),
-            new Hatchback(Guid.NewGuid(), "Toyota", "Yaris", 2021, 12000m, 4),
+            new Sedan(Guid.NewGuid(), "Hyundai", "Bayon", 2022, 15000m, 4),
+            new Hatchback(Guid.NewGuid(), "Hyundai", "i20", 2021, 12000m, 4),
             new SUV(Guid.NewGuid(), "Honda", "CRV", 2022, 20000m, 5),
             new Truck(Guid.NewGuid(), "Ford", "F-150", 2020, 25000m, 10000)
         };
@@ -37,6 +37,7 @@ public class SearchVehiclesQueryHandlerTests
         _handler = new SearchVehiclesQueryHandler(_loggerMock.Object, _repositoryMock.Object);
     }
 
+    #region constructor tests
     [Fact]
     public void Constructor_ShouldThrowArgumentNullException_WhenLoggerIsNull()
     {
@@ -73,14 +74,16 @@ public class SearchVehiclesQueryHandlerTests
         act.Should().NotThrow();
     }
 
+    #endregion
 
+    #region Handler Logic Tests
     [Fact]
     public async Task Handle_ShouldReturnVehiclesFilteredByManufacturer()
     {
         // Arrange
         var queryRequest = new SearchVehiclesRequest
         {
-            Manufacturer = "Toyota"
+            Manufacturer = "Hyundai"
         };
         var query = new SearchVehiclesQuery(queryRequest);
 
@@ -90,7 +93,7 @@ public class SearchVehiclesQueryHandlerTests
         // Assert
         response.Should().NotBeNull();
         response.Vehicles.Should().NotBeEmpty().And.OnlyContain(v => 
-            v.Manufacturer.Equals("Toyota", StringComparison.OrdinalIgnoreCase));        
+            v.Manufacturer.Equals("Hyundai", StringComparison.OrdinalIgnoreCase));        
         response.Vehicles.Count().Should().Be(2);
     }
 
@@ -144,4 +147,6 @@ public class SearchVehiclesQueryHandlerTests
         response.Should().NotBeNull();
         response.Vehicles.Should().BeEmpty();
     }
+
+    #endregion
 }
