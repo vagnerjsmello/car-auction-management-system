@@ -1,4 +1,3 @@
-Below is the final version of the README in English, written in a simple style (A2 with some B1 touches) and in British English:
 
 ---
 
