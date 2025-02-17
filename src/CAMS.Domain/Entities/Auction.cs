@@ -30,10 +30,11 @@ public class Auction : AggregateRoot
     public void PlaceBid(Bid bid)
     {
         if (Status != AuctionStatus.Active)
-            throw new InvalidBidException("Auction is not active.");
+            throw InvalidBidException.AuctionNotActive();
 
         if (bid.Amount <= HighestBid)
-            throw new InvalidBidException("Bid must be higher than the current highest bid.");
+            throw InvalidBidException.MustExceedCurrentBid();
+
 
         Bids.Add(bid);
         HighestBid = bid.Amount;

@@ -1,4 +1,5 @@
-﻿using CAMS.Domain.Exceptions;
+﻿using CAMS.Application.Commands.Auctions.StartAuction;
+using CAMS.Domain.Exceptions;
 using CAMS.Domain.Repositories;
 using CAMS.Infrastructure.Events;
 using FluentValidation;
@@ -36,8 +37,8 @@ public class CloseAuctionCommandHandler : IRequestHandler<CloseAuctionCommand, C
         ValidationResult validationResult = await _validator.ValidateAsync(command, cancellationToken);
         if (!validationResult.IsValid)
         {
-            _logger.LogWarning($"Validation failed for CloseAuctionCommand: {validationResult.Errors}");
-            throw new ValidationException(validationResult.Errors);
+            _logger.LogWarning($"Validation failed for {command.GetType().Name}: {validationResult.Errors}");
+            throw new ValidationFailedException(validationResult.Errors);
         }
 
         _logger.LogInformation($"Closing auction with ID: {command.AuctionId}");
@@ -46,8 +47,9 @@ public class CloseAuctionCommandHandler : IRequestHandler<CloseAuctionCommand, C
         var auction = await _auctionRepository.GetByIdAsync(command.AuctionId);
         if (auction == null)
         {
-            _logger.LogWarning($"Auction with ID {command.AuctionId} not found.");
-            throw new AuctionNotFoundException($"Auction with id {command.AuctionId} not found.");
+            var ex = new AuctionNotFoundException(command.AuctionId);
+            _logger.LogWarning(ex.Message);
+            throw ex;
         }
         
         auction.Close();

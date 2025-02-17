@@ -26,8 +26,10 @@ public class GetAuctionQueryHandler : IRequestHandler<GetAuctionQuery, GetAuctio
         var auction = await _auctionRepository.GetByIdAsync(query.AuctionId);
         if (auction == null)
         {
-            _logger.LogWarning($"Auction with ID {query.AuctionId} not found.");
-            throw new AuctionNotFoundException($"Auction with id {query.AuctionId} not found.");
+            var ex = new AuctionNotFoundException(query.AuctionId);
+            _logger.LogWarning(ex.Message);
+            throw ex;
+
         }
 
         var response = new GetAuctionResponse(auction.Id, auction.VehicleId, auction.HighestBid, auction.Status);

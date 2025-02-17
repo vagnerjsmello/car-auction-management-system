@@ -16,7 +16,7 @@ public class InMemoryVehicleRepository : IVehicleRepository
     {
         if (!_vehicles.TryAdd(vehicle.Id, vehicle))
         {
-            throw new VehicleAlreadyExistsException($"Vehicle with id {vehicle.Id} already exists.");
+            throw new VehicleAlreadyExistsException(vehicle.Id);
         }
         await Task.CompletedTask;
     }

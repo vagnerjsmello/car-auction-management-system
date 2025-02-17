@@ -7,6 +7,7 @@ using CAMS.Infrastructure.Events;
 using FluentAssertions;
 using FluentValidation;
 using FluentValidation.Results;
+using FluentValidation.TestHelper;
 using Microsoft.Extensions.Logging;
 using Moq;
 
@@ -152,6 +153,21 @@ public class CloseAuctionCommandHandlerTests
         await act.Should().ThrowAsync<ValidationException>().WithMessage("*AuctionId must not be empty*");
         _auctionRepositoryMock.Verify(r => r.UpdateAsync(It.IsAny<Auction>()), Times.Never);
     }
+
+    [Fact]
+    public void Validator_ShouldHaveError_WhenAuctionIdIsEmpty()
+    {
+        // Arrange
+        var request = new CloseAuctionRequest { AuctionId = Guid.Empty };
+        var command = new CloseAuctionCommand(request);
+        var validator = new CloseAuctionCommandValidator();
+
+        // Act
+        var result = validator.TestValidate(command);
+
+        // Assert
+        result.ShouldHaveValidationErrorFor(c => c.AuctionId).WithErrorMessage("AuctionId must not be empty.");
+    }   
 
     #endregion
 }

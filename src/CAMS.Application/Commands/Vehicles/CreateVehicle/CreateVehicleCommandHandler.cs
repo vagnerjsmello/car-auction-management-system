@@ -5,6 +5,7 @@ using CAMS.Domain.Repositories;
 using FluentValidation;
 using FluentValidation.Results;
 using MediatR;
+using CAMS.Application.Commands.Auctions.StartAuction;
 
 namespace CAMS.Application.Commands.Vehicles.CreateVehicle;
 
@@ -35,16 +36,17 @@ public class CreateVehicleCommandHandler : IRequestHandler<CreateVehicleCommand,
         ValidationResult validationResult = await _validator.ValidateAsync(command, cancellationToken);
         if (!validationResult.IsValid)
         {
-            _logger.LogWarning("Validation failed for CreateVehicleCommand: {Errors}", validationResult.Errors);
-            throw new ValidationException(validationResult.Errors);
+            _logger.LogWarning($"Validation failed for {command.GetType().Name}: {validationResult.Errors}");
+            throw new ValidationFailedException(validationResult.Errors);
         }
 
         // Check for duplicate vehicle
         var vehicle = await _vehicleRepository.GetByIdAsync(command.Id);
         if (vehicle is not null)
-        {
-            _logger.LogWarning("Vehicle with ID {VehicleId} already exists.", command.Id);
-            throw new VehicleAlreadyExistsException($"Vehicle with id {command.Id} already exists.");
+        {            
+            var ex = new VehicleAlreadyExistsException(command.Id);
+            _logger.LogWarning(ex.Message);
+            throw ex;
         }
 
         // Create vehicle using the factory

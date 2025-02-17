@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using CAMS.Application.Commands.Auctions.StartAuction;
 using CAMS.Domain.Entities;
 using CAMS.Domain.Exceptions;
 using CAMS.Domain.Repositories;
@@ -36,8 +37,9 @@ namespace CAMS.Application.Commands.Auctions.PlaceBid
             ValidationResult validationResult = await _validator.ValidateAsync(command, cancellationToken);
             if (!validationResult.IsValid)
             {
-                _logger.LogWarning($"Validation failed for PlaceBidCommand: {validationResult.Errors}");
-                throw new ValidationException(validationResult.Errors);
+                _logger.LogWarning($"Validation failed for {command.GetType().Name}: {validationResult.Errors}");
+                throw new ValidationFailedException(validationResult.Errors);
+
             }
 
             _logger.LogInformation($"Placing bid on auction {command.AuctionId}");
@@ -46,8 +48,9 @@ namespace CAMS.Application.Commands.Auctions.PlaceBid
             var auction = await _auctionRepository.GetByIdAsync(command.AuctionId);
             if (auction == null)
             {
-                _logger.LogWarning($"Auction with ID {command.AuctionId} not found.");
-                throw new AuctionNotFoundException($"Auction with id {command.AuctionId} not found.");
+                var ex = new AuctionNotFoundException(command.AuctionId);
+                _logger.LogWarning(ex.Message);
+                throw ex;
             }
             
             var bid = new Bid(command.BidAmount, command.BidderId);

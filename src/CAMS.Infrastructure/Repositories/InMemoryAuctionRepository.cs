@@ -16,7 +16,7 @@ public class InMemoryAuctionRepository : IAuctionRepository
     {        
         if (!_auctions.TryAdd(auction.VehicleId, auction))
         {
-            throw new AuctionAlreadyActiveException($"An active auction already exists for this vehicle {auction.VehicleId}.");
+            throw new AuctionAlreadyActiveException(auction.VehicleId);
         }
         await Task.CompletedTask;
     }

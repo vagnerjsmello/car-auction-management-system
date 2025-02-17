@@ -43,24 +43,26 @@ public class StartAuctionCommandHandler : IRequestHandler<StartAuctionCommand, S
         ValidationResult validationResult = await _validator.ValidateAsync(command, cancellationToken);
         if (!validationResult.IsValid)
         {
-            _logger.LogWarning("Validation failed for StartAuctionCommand: {Errors}", validationResult.Errors);
-            throw new ValidationException(validationResult.Errors);
+            _logger.LogWarning($"Validation failed for {command.GetType().Name}: {validationResult.Errors}");
+            throw new ValidationFailedException(validationResult.Errors);
         }
 
         _logger.LogInformation("Starting auction for vehicle ID: {VehicleId}", command.VehicleId);
 
         var vehicle = await _vehicleRepository.GetByIdAsync(command.VehicleId);
         if (vehicle == null)
-        {
-            _logger.LogWarning("Vehicle with ID {VehicleId} not found.", command.VehicleId);
-            throw new VehicleNotFoundException($"Vehicle with id {command.VehicleId} not found.");
+        {            
+            var ex = new VehicleNotFoundException(command.VehicleId);
+            _logger.LogWarning(ex.Message);
+            throw ex;
         }
 
         var existingAuction = await _auctionRepository.GetActiveAuctionByVehicleIdAsync(command.VehicleId);
         if (existingAuction != null)
         {
-            _logger.LogWarning("Auction is already active for vehicle {VehicleId}.", command.VehicleId);
-            throw new AuctionAlreadyActiveException($"An active auction already exists for vehicle {command.VehicleId}.");
+            var ex = new AuctionAlreadyActiveException(command.VehicleId);
+            _logger.LogWarning(ex.Message);  // Or ex.ToString() if want stacktrace
+            throw ex;
         }
         
         var auction = new Auction(command.VehicleId, command.StartingBid);
