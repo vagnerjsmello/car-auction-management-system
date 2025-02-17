@@ -55,12 +55,12 @@ CAMS.Application
     │   │   ├── StartAuctionCommandHandler.cs
     │   │   ├── StartAuctionCommandValidator.cs
     │   │   └── StartAuctionResponse.cs
-    │   └── CreateVehicle
-    │       ├── CreateVehicleCommand.cs
-    │       ├── CreateVehicleCommandHandler.cs
-    │       ├── CreateVehicleCommandValidator.cs
-    │       ├── CreateVehicleRequest.cs
-    │       └── CreateVehicleResponse.cs
+    ├── CreateVehicle
+    │   ├── CreateVehicleCommand.cs
+    │   ├── CreateVehicleCommandHandler.cs
+    │   ├── CreateVehicleCommandValidator.cs
+    │   ├── CreateVehicleRequest.cs
+    │   └── CreateVehicleResponse.cs
 └── Queries
     ├── Auctions
     │   ├── GetAuction
