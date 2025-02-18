@@ -50,18 +50,18 @@ CAMS.Application
     │   │   ├── PlaceBidCommandHandler.cs
     │   │   ├── PlaceBidCommandValidator.cs
     │   │   └── PlaceBidResponse.cs
-    │   ├── StartAuction
-    │   │   ├── StartAuctionCommand.cs
-    │   │   ├── StartAuctionCommandHandler.cs
-    │   │   ├── StartAuctionCommandValidator.cs
-    │   │   └── StartAuctionResponse.cs
-    ├── Vehicle
-    │   ├── Create Vehicle
-    │   │   ├── CreateVehicleCommand.cs
-    |   │   ├── CreateVehicleCommandHandler.cs
-    |   │   ├── CreateVehicleCommandValidator.cs
-    |   │   ├── CreateVehicleRequest.cs
-    |   │   └── CreateVehicleResponse.cs
+    │   └── StartAuction
+    │       ├── StartAuctionCommand.cs
+    │       ├── StartAuctionCommandHandler.cs
+    │       ├── StartAuctionCommandValidator.cs
+    │       └── StartAuctionResponse.cs
+    └── Vehicle
+        └── Create Vehicle
+            ├── CreateVehicleCommand.cs
+            ├── CreateVehicleCommandHandler.cs
+            ├── CreateVehicleCommandValidator.cs
+            ├── CreateVehicleRequest.cs
+            └── CreateVehicleResponse.cs
 └── Queries
     ├── Auctions
     │   ├── GetAuction
