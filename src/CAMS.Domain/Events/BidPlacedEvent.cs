@@ -6,7 +6,7 @@
 public class BidPlacedEvent : DomainEvent
 {
     public Guid AuctionId { get; }
-    public Guid VehicleId { get; }  
+    public Guid VehicleId { get; }
     public decimal BidAmount { get; }
     public Guid BidderId { get; }
     public DateTime Timestamp { get; }

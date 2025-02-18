@@ -6,7 +6,7 @@
 public class AuctionClosedEvent : DomainEvent
 {
     public Guid AuctionId { get; }
-    public Guid VehicleId { get; }  
+    public Guid VehicleId { get; }
     public decimal FinalHighestBid { get; }
     public DateTime ClosedAt { get; }
 

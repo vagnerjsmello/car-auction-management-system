@@ -1,5 +1,4 @@
-﻿using CAMS.Application.Commands.Auctions.StartAuction;
-using CAMS.Domain.Exceptions;
+﻿using CAMS.Domain.Exceptions;
 using CAMS.Domain.Repositories;
 using CAMS.Infrastructure.Events;
 using FluentValidation;
@@ -20,9 +19,9 @@ public class CloseAuctionCommandHandler : IRequestHandler<CloseAuctionCommand, C
     private readonly IDomainEventPublisher _eventPublisher;
 
     public CloseAuctionCommandHandler(
-        IAuctionRepository auctionRepository, 
-        IValidator<CloseAuctionCommand> validator, 
-        ILogger<CloseAuctionCommandHandler> logger, 
+        IAuctionRepository auctionRepository,
+        IValidator<CloseAuctionCommand> validator,
+        ILogger<CloseAuctionCommandHandler> logger,
         IDomainEventPublisher eventPublisher)
     {
         _auctionRepository = auctionRepository ?? throw new ArgumentNullException(nameof(auctionRepository));
@@ -33,7 +32,7 @@ public class CloseAuctionCommandHandler : IRequestHandler<CloseAuctionCommand, C
 
     public async Task<CloseAuctionResponse> Handle(CloseAuctionCommand command, CancellationToken cancellationToken)
     {
-        
+
         ValidationResult validationResult = await _validator.ValidateAsync(command, cancellationToken);
         if (!validationResult.IsValid)
         {
@@ -43,7 +42,7 @@ public class CloseAuctionCommandHandler : IRequestHandler<CloseAuctionCommand, C
 
         _logger.LogInformation($"Closing auction with ID: {command.AuctionId}");
 
-        
+
         var auction = await _auctionRepository.GetByIdAsync(command.AuctionId);
         if (auction == null)
         {
@@ -51,9 +50,9 @@ public class CloseAuctionCommandHandler : IRequestHandler<CloseAuctionCommand, C
             _logger.LogWarning(ex.Message);
             throw ex;
         }
-        
+
         auction.Close();
-        
+
         await _auctionRepository.UpdateAsync(auction);
 
         await _eventPublisher.PublishEventsAsync(auction);

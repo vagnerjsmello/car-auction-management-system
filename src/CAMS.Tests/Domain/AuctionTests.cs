@@ -1,11 +1,8 @@
-﻿using System;
-using System.Linq;
-using CAMS.Domain.Entities;
+﻿using CAMS.Domain.Entities;
 using CAMS.Domain.Enums;
 using CAMS.Domain.Events;
 using CAMS.Domain.Exceptions;
 using FluentAssertions;
-using Xunit;
 
 namespace CAMS.Tests.Domain
 {

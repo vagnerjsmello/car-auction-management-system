@@ -167,7 +167,7 @@ public class CloseAuctionCommandHandlerTests
 
         // Assert
         result.ShouldHaveValidationErrorFor(c => c.AuctionId).WithErrorMessage("AuctionId must not be empty.");
-    }   
+    }
 
     #endregion
 }

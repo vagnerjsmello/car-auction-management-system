@@ -1,7 +1,4 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
-using CAMS.Domain.Entities;
+﻿using CAMS.Domain.Entities;
 using CAMS.Domain.Exceptions;
 using CAMS.Domain.Repositories;
 using CAMS.Infrastructure.Events;
@@ -24,10 +21,10 @@ public class StartAuctionCommandHandler : IRequestHandler<StartAuctionCommand, S
     private readonly IDomainEventPublisher _eventPublisher;
 
     public StartAuctionCommandHandler(
-        IVehicleRepository vehicleRepository, 
-        IAuctionRepository auctionRepository, 
-        IValidator<StartAuctionCommand> validator, 
-        ILogger<StartAuctionCommandHandler> logger, 
+        IVehicleRepository vehicleRepository,
+        IAuctionRepository auctionRepository,
+        IValidator<StartAuctionCommand> validator,
+        ILogger<StartAuctionCommandHandler> logger,
         IDomainEventPublisher eventPublisher)
     {
         _vehicleRepository = vehicleRepository ?? throw new ArgumentNullException(nameof(vehicleRepository));
@@ -51,7 +48,7 @@ public class StartAuctionCommandHandler : IRequestHandler<StartAuctionCommand, S
 
         var vehicle = await _vehicleRepository.GetByIdAsync(command.VehicleId);
         if (vehicle == null)
-        {            
+        {
             var ex = new VehicleNotFoundException(command.VehicleId);
             _logger.LogWarning(ex.Message);
             throw ex;
@@ -64,7 +61,7 @@ public class StartAuctionCommandHandler : IRequestHandler<StartAuctionCommand, S
             _logger.LogWarning(ex.Message);  // Or ex.ToString() if want stacktrace
             throw ex;
         }
-        
+
         var auction = new Auction(command.VehicleId, command.StartingBid);
 
         await _auctionRepository.AddAsync(auction);

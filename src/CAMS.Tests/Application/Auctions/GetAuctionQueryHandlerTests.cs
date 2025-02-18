@@ -64,7 +64,7 @@ public class GetAuctionQueryHandlerTests
         // Arrange
         var vehicleId = Guid.NewGuid();
         decimal startingBid = 10000m;
-        
+
         var auction = new Auction(vehicleId, startingBid);
         var auctionId = auction.Id;  // Use the generated auction Id in the query.
         auction.Status.Should().Be(AuctionStatus.Active);

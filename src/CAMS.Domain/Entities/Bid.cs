@@ -5,8 +5,8 @@
 /// </summary>
 public class Bid
 {
-    public decimal Amount { get; set; }    
-    public Guid BidderId { get; set; } 
+    public decimal Amount { get; set; }
+    public Guid BidderId { get; set; }
     public DateTime Timestamp { get; set; }
 
     public Bid(decimal amount, Guid bidderId)

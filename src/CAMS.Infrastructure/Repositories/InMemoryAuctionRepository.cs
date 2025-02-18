@@ -13,7 +13,7 @@ public class InMemoryAuctionRepository : IAuctionRepository
     private readonly ConcurrentDictionary<Guid, Auction> _auctions = new ConcurrentDictionary<Guid, Auction>();
 
     public async Task AddAsync(Auction auction)
-    {        
+    {
         if (!_auctions.TryAdd(auction.VehicleId, auction))
         {
             throw new AuctionAlreadyActiveException(auction.VehicleId);
@@ -28,7 +28,7 @@ public class InMemoryAuctionRepository : IAuctionRepository
     }
 
     public async Task<Auction?> GetByIdAsync(Guid auctionId)
-    {        
+    {
         var auction = _auctions.Values.FirstOrDefault(a => a.Id == auctionId);
         return await Task.FromResult(auction);
     }

@@ -44,7 +44,7 @@ public class VehicleFactoryTests
         vehicle.Model.Should().Be(model);
         vehicle.Year.Should().Be(year);
         vehicle.StartingBid.Should().Be(startingBid);
-        
+
         switch (vehicleType)
         {
             case VehicleType.Hatchback:
@@ -89,7 +89,7 @@ public class VehicleFactoryTests
         act.Should().Throw<ArgumentOutOfRangeException>();
     }
 
-    
+
     [Fact]
     public void Sedan_WithZeroNumberOfDoors_ShouldThrowArgumentException()
     {
@@ -107,7 +107,7 @@ public class VehicleFactoryTests
         // Assert
         act.Should().Throw<ArgumentException>().WithMessage("*NumberOfDoors*");
     }
-    
+
     [Fact]
     public void Hatchback_WithZeroNumberOfDoors_ShouldThrowArgumentException()
     {
@@ -126,7 +126,7 @@ public class VehicleFactoryTests
         act.Should().Throw<ArgumentException>().WithMessage("*NumberOfDoors*");
     }
 
-    
+
     [Fact]
     public void SUV_WithZeroNumberOfSeats_ShouldThrowArgumentException()
     {
@@ -144,7 +144,7 @@ public class VehicleFactoryTests
         // Assert
         act.Should().Throw<ArgumentException>().WithMessage("*NumberOfSeats*");
     }
-    
+
     [Fact]
     public void Truck_WithNonPositiveLoadCapacity_ShouldThrowArgumentException()
     {
@@ -162,7 +162,7 @@ public class VehicleFactoryTests
         // Assert
         act.Should().Throw<ArgumentException>().WithMessage("*LoadCapacity*");
     }
-    
+
     [Fact]
     public void Vehicle_WithEmptyManufacturer_ShouldThrowArgumentException()
     {
@@ -180,7 +180,7 @@ public class VehicleFactoryTests
         // Assert
         act.Should().Throw<ArgumentException>().WithMessage("*Manufacturer*");
     }
-    
+
     [Fact]
     public void Vehicle_WithEmptyModel_ShouldThrowArgumentException()
     {

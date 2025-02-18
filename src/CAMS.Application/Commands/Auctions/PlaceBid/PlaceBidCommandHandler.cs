@@ -1,8 +1,4 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
-using CAMS.Application.Commands.Auctions.StartAuction;
-using CAMS.Domain.Entities;
+﻿using CAMS.Domain.Entities;
 using CAMS.Domain.Exceptions;
 using CAMS.Domain.Repositories;
 using CAMS.Infrastructure.Events;
@@ -33,7 +29,7 @@ namespace CAMS.Application.Commands.Auctions.PlaceBid
 
         public async Task<PlaceBidResponse> Handle(PlaceBidCommand command, CancellationToken cancellationToken)
         {
-            
+
             ValidationResult validationResult = await _validator.ValidateAsync(command, cancellationToken);
             if (!validationResult.IsValid)
             {
@@ -44,7 +40,7 @@ namespace CAMS.Application.Commands.Auctions.PlaceBid
 
             _logger.LogInformation($"Placing bid on auction {command.AuctionId}");
 
-            
+
             var auction = await _auctionRepository.GetByIdAsync(command.AuctionId);
             if (auction == null)
             {
@@ -52,11 +48,11 @@ namespace CAMS.Application.Commands.Auctions.PlaceBid
                 _logger.LogWarning(ex.Message);
                 throw ex;
             }
-            
+
             var bid = new Bid(command.BidAmount, command.BidderId);
 
             auction.PlaceBid(bid);
-            
+
             await _auctionRepository.UpdateAsync(auction);
             await _eventPublisher.PublishEventsAsync(auction);
 

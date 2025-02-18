@@ -31,7 +31,7 @@ public class SearchVehiclesQueryHandlerTests
             new SUV(Guid.NewGuid(), "Honda", "CRV", 2022, 20000m, 5),
             new Truck(Guid.NewGuid(), "Ford", "F-150", 2020, 25000m, 10000)
         };
-        
+
         _repositoryMock.Setup(r => r.Search(It.IsAny<Func<Vehicle, bool>>())).ReturnsAsync((Func<Vehicle, bool> predicate) => _vehicles.Where(predicate));
 
         _handler = new SearchVehiclesQueryHandler(_loggerMock.Object, _repositoryMock.Object);
@@ -92,8 +92,8 @@ public class SearchVehiclesQueryHandlerTests
 
         // Assert
         response.Should().NotBeNull();
-        response.Vehicles.Should().NotBeEmpty().And.OnlyContain(v => 
-            v.Manufacturer.Equals("Hyundai", StringComparison.OrdinalIgnoreCase));        
+        response.Vehicles.Should().NotBeEmpty().And.OnlyContain(v =>
+            v.Manufacturer.Equals("Hyundai", StringComparison.OrdinalIgnoreCase));
         response.Vehicles.Count().Should().Be(2);
     }
 
@@ -122,7 +122,7 @@ public class SearchVehiclesQueryHandlerTests
     public async Task Handle_ShouldReturnAllVehicles_WhenNoCriteriaProvided()
     {
         // Arrange
-        var queryRequest = new SearchVehiclesRequest(); 
+        var queryRequest = new SearchVehiclesRequest();
         var query = new SearchVehiclesQuery(queryRequest);
 
         // Act

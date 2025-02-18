@@ -62,10 +62,10 @@ public class SearchAuctionsQueryHandlerTests
     {
         // Arrange
         var auction1 = new Auction(Guid.NewGuid(), 10000m);
-        
+
         var auction2 = new Auction(Guid.NewGuid(), 15000m);
         auction2.Close(); // Set auction2 as Closed.
-        
+
         var auctions = new List<Auction> { auction1, auction2 };
         _auctionRepositoryMock.Setup(r => r.SearchAsync(It.IsAny<Func<Auction, bool>>()))
                               .ReturnsAsync((Func<Auction, bool> predicate) => auctions.Where(predicate));
@@ -126,8 +126,8 @@ public class SearchAuctionsQueryHandlerTests
     public async Task Handle_ShouldReturnAuctionsMatchingCombinedFilters()
     {
         // Arrange
-        var vehicleId = Guid.NewGuid();        
-        var auctionMatching = new Auction(vehicleId, 10000m);        
+        var vehicleId = Guid.NewGuid();
+        var auctionMatching = new Auction(vehicleId, 10000m);
         auctionMatching.Close();
 
         var auctionNonMatching = new Auction(Guid.NewGuid(), 15000m);

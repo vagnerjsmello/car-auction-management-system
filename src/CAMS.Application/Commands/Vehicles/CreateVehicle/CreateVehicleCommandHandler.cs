@@ -1,11 +1,10 @@
-﻿using Microsoft.Extensions.Logging;
-using CAMS.Domain.Exceptions;
+﻿using CAMS.Domain.Exceptions;
 using CAMS.Domain.Factories;
 using CAMS.Domain.Repositories;
 using FluentValidation;
 using FluentValidation.Results;
 using MediatR;
-using CAMS.Application.Commands.Auctions.StartAuction;
+using Microsoft.Extensions.Logging;
 
 namespace CAMS.Application.Commands.Vehicles.CreateVehicle;
 
@@ -43,7 +42,7 @@ public class CreateVehicleCommandHandler : IRequestHandler<CreateVehicleCommand,
         // Check for duplicate vehicle
         var vehicle = await _vehicleRepository.GetByIdAsync(command.Id);
         if (vehicle is not null)
-        {            
+        {
             var ex = new VehicleAlreadyExistsException(command.Id);
             _logger.LogWarning(ex.Message);
             throw ex;

@@ -14,8 +14,8 @@ public class Sedan : Vehicle
         : base(id, manufacturer, model, year, startingBid)
     {
 
-        if (numberOfDoors <= 0)        
-            throw new ArgumentException("NumberOfDoors must be greater than zero.", nameof(numberOfDoors));        
+        if (numberOfDoors <= 0)
+            throw new ArgumentException("NumberOfDoors must be greater than zero.", nameof(numberOfDoors));
 
         NumberOfDoors = numberOfDoors;
     }
