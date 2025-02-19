@@ -1,6 +1,6 @@
 ﻿using CAMS.Domain.Events;
 
-namespace CAMS.Infrastructure.Events;
+namespace CAMS.Infrastructure.Events.FakePublisher;
 
 
 /// <summary>
