@@ -1,6 +1,6 @@
 ﻿using CAMS.Domain.Events;
 
-namespace CAMS.Infrastructure.Events;
+namespace CAMS.Infrastructure.Events.FakePublisher;
 
 /// <summary>
 /// A fake implementation of IDomainEventDispatcher that simulates event dispatching.
