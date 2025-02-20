@@ -1,4 +1,5 @@
-﻿using CAMS.Domain.Entities;
+﻿using CAMS.Application.Common;
+using CAMS.Domain.Entities;
 using CAMS.Domain.Exceptions;
 using CAMS.Domain.Repositories;
 using CAMS.Infrastructure.Events;
@@ -12,7 +13,7 @@ namespace CAMS.Application.Commands.Auctions.PlaceBid
     /// <summary>
     /// Handles the PlaceBidCommand logic.
     /// </summary>
-    public class PlaceBidCommandHandler : IRequestHandler<PlaceBidCommand, PlaceBidResponse>
+    public class PlaceBidCommandHandler : IRequestHandler<PlaceBidCommand, OperationResult<PlaceBidResponse>>
     {
         private readonly IAuctionRepository _auctionRepository;
         private readonly IValidator<PlaceBidCommand> _validator;
@@ -27,14 +28,14 @@ namespace CAMS.Application.Commands.Auctions.PlaceBid
             _eventPublisher = eventPublisher ?? throw new ArgumentNullException(nameof(eventPublisher));
         }
 
-        public async Task<PlaceBidResponse> Handle(PlaceBidCommand command, CancellationToken cancellationToken)
+        public async Task<OperationResult<PlaceBidResponse>> Handle(PlaceBidCommand command, CancellationToken cancellationToken)
         {
 
             ValidationResult validationResult = await _validator.ValidateAsync(command, cancellationToken);
             if (!validationResult.IsValid)
             {
                 _logger.LogWarning($"Validation failed for {command.GetType().Name}: {validationResult.Errors}");
-                throw new ValidationFailedException(validationResult.Errors);
+                return OperationResult<PlaceBidResponse>.Fail(validationResult);
 
             }
 
@@ -57,7 +58,7 @@ namespace CAMS.Application.Commands.Auctions.PlaceBid
             await _eventPublisher.PublishEventsAsync(auction);
 
             _logger.LogInformation($"Bid placed successfully on auction {command.AuctionId}. New highest bid: {auction.HighestBid}");
-            return new PlaceBidResponse(auction.Id, auction.HighestBid);
+            return OperationResult<PlaceBidResponse>.Success(new PlaceBidResponse(auction.Id, auction.HighestBid));
         }
     }
 }

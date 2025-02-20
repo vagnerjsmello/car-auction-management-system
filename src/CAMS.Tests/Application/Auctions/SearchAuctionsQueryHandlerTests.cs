@@ -75,8 +75,8 @@ public class SearchAuctionsQueryHandlerTests
         // Act
         var response = await _handler.Handle(query, CancellationToken.None);
         // Assert
-        response.Auctions.Should().ContainSingle(a => a.Id == auction1.Id);
-        response.Auctions.Should().NotContain(a => a.Id == auction2.Id);
+        response.Data.Auctions.Should().ContainSingle(a => a.Id == auction1.Id);
+        response.Data.Auctions.Should().NotContain(a => a.Id == auction2.Id);
     }
 
     [Fact]
@@ -97,7 +97,8 @@ public class SearchAuctionsQueryHandlerTests
         var response = await _handler.Handle(query, CancellationToken.None);
 
         // Assert
-        response.Auctions.Should().ContainSingle(a => a.VehicleId == vehicleId);
+        response.IsSuccess.Should().BeTrue();
+        response.Data.Auctions.Should().ContainSingle(a => a.VehicleId == vehicleId);
     }
 
     [Fact]
@@ -118,7 +119,8 @@ public class SearchAuctionsQueryHandlerTests
         var response = await _handler.Handle(query, CancellationToken.None);
 
         // Assert
-        response.Auctions.Should().BeEmpty();
+        response.IsSuccess.Should().BeTrue();
+        response.Data.Auctions.Should().BeEmpty();
     }
 
 
@@ -142,8 +144,9 @@ public class SearchAuctionsQueryHandlerTests
         var response = await _handler.Handle(query, CancellationToken.None);
 
         // Assert
-        response.Auctions.Should().ContainSingle(a => a.Id == auctionMatching.Id);
-        response.Auctions.Should().NotContain(a => a.Id == auctionNonMatching.Id);
+        response.IsSuccess.Should().BeTrue();
+        response.Data.Auctions.Should().ContainSingle(a => a.Id == auctionMatching.Id);
+        response.Data.Auctions.Should().NotContain(a => a.Id == auctionNonMatching.Id);
     }
 
     [Fact]
@@ -163,7 +166,7 @@ public class SearchAuctionsQueryHandlerTests
         var response = await _handler.Handle(query, CancellationToken.None);
 
         // Assert
-        response.Auctions.Should().HaveCount(2);
+        response.Data.Auctions.Should().HaveCount(2);
     }
     #endregion
 }

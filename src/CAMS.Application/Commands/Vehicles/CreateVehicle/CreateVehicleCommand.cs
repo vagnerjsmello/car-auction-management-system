@@ -1,4 +1,5 @@
-﻿using CAMS.Domain.Enums;
+﻿using CAMS.Application.Common;
+using CAMS.Domain.Enums;
 using MediatR;
 
 namespace CAMS.Application.Commands.Vehicles.CreateVehicle;
@@ -6,7 +7,7 @@ namespace CAMS.Application.Commands.Vehicles.CreateVehicle;
 /// <summary>
 /// Command that triggers the creation of a vehicle.
 /// </summary>
-public class CreateVehicleCommand : IRequest<CreateVehicleResponse>
+public class CreateVehicleCommand : IRequest<OperationResult<CreateVehicleResponse>>
 {
     public Guid Id { get; }
     public VehicleType VehicleType { get; }

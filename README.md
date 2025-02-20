@@ -9,7 +9,7 @@ This repository contains the solution for the **Car Auction Management System**,
 2. **Search for vehicles** by type, manufacturer, model, or year.
 3. **Start and close auctions** for vehicles, making sure only one auction is active per vehicle.
 4. **Place bids** in active auctions, ensuring that a new bid is higher than the current bid.
-5. **Handle errors** using specific exceptions (for example, `VehicleNotFoundException`, `InvalidBidException`, etc.) and centralised validations (using **FluentValidation** and a custom exception called *ValidationFailedException*).
+5. **Handle errors** using specific exceptions (for example, `VehicleNotFoundException`, `InvalidBidException`, etc.) and centralised validations (using `FluentValidation` and **NotificationPattern**).
 
 The solution was implemented using principles of **Clean Architecture** and **Domain-Driven Design (DDD)**, applying Object-Oriented patterns.
 
@@ -76,12 +76,15 @@ CAMS.Application
         ├── SearchVehiclesQuery.cs
         ├── SearchVehiclesQueryHandler.cs
         └── SearchVehiclesResponse.cs
+└── Common
+        └── OperationResult.cs
 ```
 
 **Responsibilities:**
 
-- **Commands:** These handle write operations. They validate data and interact with the domain, and also publish Domain Events via an injected `DomainEventPublisher`.
-- **Queries:** These allow reading and searching for information, returning structured responses.
+- **Commands:** They perform write operations. They check the data and work with the domain. They also send Domain Events using an injected DomainEventPublisher.
+- **Queries:** They let you read and search for information. They return organized responses.
+- **OperationResult:** Our commands and queries now return an OperationResult. This supports the Notification Pattern by gathering all validation errors and success data into one unified response.
 
 ---
 
@@ -116,8 +119,8 @@ CAMS.Domain
 │   ├── AuctionNotFoundException.cs
 │   ├── InvalidBidException.cs
 │   ├── VehicleAlreadyExistsException.cs
-│   ├── VehicleNotFoundException.cs
-│   └── ValidationFailedException.cs
+│   └── VehicleNotFoundException.cs
+
 ├── Factories
 │   └── VehicleFactory.cs
 └── Repositories
@@ -134,8 +137,13 @@ CAMS.Domain
 - **Factory Method:**  
   `VehicleFactory` centralises the creation of `Vehicle` instances based on the `VehicleType`.
 
-- **Exceptions and Events:**  
-  Custom exceptions (e.g. `AuctionAlreadyActiveException`, `AuctionNotFoundException`, `InvalidBidException`, `VehicleAlreadyExistsException`, `VehicleNotFoundException`, and `ValidationFailedException`) are standardised to centralise messages and ease error handling. Domain Events are recorded in the entities and later dispatched by the Application/Infrastructure layer.
+- **Exceptions and Notification Pattern:**  
+  Custom exceptions (e.g. `AuctionAlreadyActiveException`, `AuctionNotFoundException`, `InvalidBidException`, `VehicleAlreadyExistsException`, `VehicleNotFoundException`) are standardised to centralise error handling. 
+  We use `FluentValidation` to check user input and create an OperationResult. This gathers all errors into one response using the **Notification Pattern**, avoiding immediate exception throws.
+  
+- **Events:**  
+  Domain Events are recorded in the entities and later dispatched by the Application/Infrastructure layer.
+
 
 ---
 
@@ -235,6 +243,9 @@ CAMS.Tests
 - **Custom Exceptions and Validations:**  
   Custom exceptions have been standardised to centralise error messages and simplify error handling. Validations are implemented with **FluentValidation** and tested with **FluentValidation.TestHelper** to ensure data consistency.
 
+  **Notification Pattern**
+  Instead of throwing exceptions immediately for validation errors, our system collects errors into an `OperationResult`. This allows all validation errors to be returned together in a single, unified response, making error handling more efficient and user-friendly.
+
 ---
 
 ## Key Tests and Requirements Coverage
@@ -243,7 +254,7 @@ Unit tests have been created to cover the system’s critical scenarios:
 
 - **CreateVehicleCommandHandlerTests:**  
   - **Handle_ShouldCreateVehicleSuccessfully_WhenCommandIsValid:** Checks vehicle creation with valid data.  
-  - **Handle_ShouldThrowValidationException_WhenValidationFails:** Ensures invalid data triggers the validation exception.  
+  - **Handle_ShouldReturnFailureResult_WhenValidationFailsForCreateVehicleCommand:** Ensures that invalid data is inserted into the response via Notification Pattern without having to throw an exception.  
   - **Handle_ShouldThrowVehicleAlreadyExistsException_WhenVehicleWithSameIdExists:** Tests duplicate detection and throws the correct exception.
 
 - **StartAuctionCommandHandlerTests:**  

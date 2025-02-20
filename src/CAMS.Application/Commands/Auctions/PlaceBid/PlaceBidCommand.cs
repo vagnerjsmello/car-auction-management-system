@@ -1,11 +1,12 @@
-﻿using MediatR;
+﻿using CAMS.Application.Common;
+using MediatR;
 
 namespace CAMS.Application.Commands.Auctions.PlaceBid;
 
 /// <summary>
 /// Command to place a bid on an active auction.
 /// </summary>
-public class PlaceBidCommand : IRequest<PlaceBidResponse>
+public class PlaceBidCommand : IRequest<OperationResult<PlaceBidResponse>>
 {
     public Guid AuctionId { get; }
     public decimal BidAmount { get; }
