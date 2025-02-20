@@ -1,4 +1,5 @@
-﻿using CAMS.Domain.Entities;
+﻿using CAMS.Application.Common;
+using CAMS.Domain.Entities;
 using CAMS.Domain.Exceptions;
 using CAMS.Domain.Repositories;
 using CAMS.Infrastructure.Events;
@@ -12,7 +13,7 @@ namespace CAMS.Application.Commands.Auctions.StartAuction;
 /// <summary>
 /// Handles the StartAuctionCommand logic.
 /// </summary>
-public class StartAuctionCommandHandler : IRequestHandler<StartAuctionCommand, StartAuctionResponse>
+public class StartAuctionCommandHandler : IRequestHandler<StartAuctionCommand, OperationResult<StartAuctionResponse>>
 {
     private readonly IVehicleRepository _vehicleRepository;
     private readonly IAuctionRepository _auctionRepository;
@@ -34,14 +35,14 @@ public class StartAuctionCommandHandler : IRequestHandler<StartAuctionCommand, S
         _eventPublisher = eventPublisher ?? throw new ArgumentNullException(nameof(eventPublisher));
     }
 
-    public async Task<StartAuctionResponse> Handle(StartAuctionCommand command, CancellationToken cancellationToken)
+    public async Task<OperationResult<StartAuctionResponse>> Handle(StartAuctionCommand command, CancellationToken cancellationToken)
     {
         // Validate the command
         ValidationResult validationResult = await _validator.ValidateAsync(command, cancellationToken);
         if (!validationResult.IsValid)
         {
             _logger.LogWarning($"Validation failed for {command.GetType().Name}: {validationResult.Errors}");
-            throw new ValidationFailedException(validationResult.Errors);
+            return OperationResult<StartAuctionResponse>.Fail(validationResult);
         }
 
         _logger.LogInformation("Starting auction for vehicle ID: {VehicleId}", command.VehicleId);
@@ -69,6 +70,6 @@ public class StartAuctionCommandHandler : IRequestHandler<StartAuctionCommand, S
 
         _logger.LogInformation("Auction {AuctionId} started for vehicle {VehicleId}.", auction.Id, command.VehicleId);
 
-        return new StartAuctionResponse(auction.Id, command.VehicleId, command.StartingBid);
+        return OperationResult<StartAuctionResponse>.Success(new StartAuctionResponse(auction.Id, command.VehicleId, command.StartingBid));
     }
 }

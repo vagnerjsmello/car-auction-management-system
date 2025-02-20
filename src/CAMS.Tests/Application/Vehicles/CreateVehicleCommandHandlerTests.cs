@@ -132,12 +132,13 @@ namespace CAMS.Tests.Application.Vehicles
 
             // Assert
             result.Should().NotBeNull("because a valid vehicle should be created");
-            result.Id.Should().Be(command.Id);
-            result.VehicleType.Should().Be(VehicleType.Sedan);
-            result.Manufacturer.Should().Be("Hyundai");
-            result.Model.Should().Be("Bayon");
-            result.Year.Should().Be(2022);
-            result.NumberOfDoors.Should().Be(4);
+            result.IsSuccess.Should().BeTrue();
+            result.Data.Id.Should().Be(command.Id);
+            result.Data.VehicleType.Should().Be(VehicleType.Sedan);
+            result.Data.Manufacturer.Should().Be("Hyundai");
+            result.Data.Model.Should().Be("Bayon");
+            result.Data.Year.Should().Be(2022);
+            result.Data.NumberOfDoors.Should().Be(4);
 
             _repositoryMock.Verify(r => r.AddAsync(It.IsAny<Vehicle>()), Times.Once,
                 "because the vehicle should be added once");
@@ -155,7 +156,7 @@ namespace CAMS.Tests.Application.Vehicles
         }
 
         [Fact]
-        public async Task Handle_ShouldThrowValidationException_WhenValidationFails()
+        public async Task Handle_ShouldReturnFailureResult_WhenValidationFailsForCreateVehicleCommand()
         {
             // Arrange
             var request = new CreateVehicleRequest
@@ -171,17 +172,18 @@ namespace CAMS.Tests.Application.Vehicles
             var command = new CreateVehicleCommand(request);
 
             var validationFailure = new ValidationFailure("Id", "UniqueId must not be empty.");
-            var invalidResult = new ValidationResult(new[] { validationFailure });
-
+            var invalidResult = new ValidationResult(new[] { validationFailure });            
             _validatorMock.Setup(v => v.ValidateAsync(command, It.IsAny<CancellationToken>())).ReturnsAsync(invalidResult);
 
             // Act
-            Func<Task> act = async () => await _handler.Handle(command, CancellationToken.None);
+            var result = await _handler.Handle(command, CancellationToken.None);
 
             // Assert
-            await act.Should().ThrowAsync<ValidationException>().WithMessage("*UniqueId must not be empty.*");
+            result.IsSuccess.Should().BeFalse();
+            result.Errors.Should().Contain(e => e.Contains("UniqueId must not be empty"));
             _repositoryMock.Verify(r => r.AddAsync(It.IsAny<Vehicle>()), Times.Never);
         }
+
 
         [Fact]
         public async Task Handle_ShouldThrowVehicleAlreadyExistsException_WhenVehicleWithSameIdExists()

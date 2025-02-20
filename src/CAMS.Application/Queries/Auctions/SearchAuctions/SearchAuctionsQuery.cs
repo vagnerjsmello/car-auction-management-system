@@ -1,4 +1,5 @@
-﻿using CAMS.Domain.Enums;
+﻿using CAMS.Application.Common;
+using CAMS.Domain.Enums;
 using MediatR;
 
 namespace CAMS.Application.Queries.Auctions.SearchAuctions;
@@ -6,7 +7,7 @@ namespace CAMS.Application.Queries.Auctions.SearchAuctions;
 /// <summary>
 /// Query to search auctions based on filter criteria.
 /// </summary>
-public class SearchAuctionsQuery : IRequest<SearchAuctionsResponse>
+public class SearchAuctionsQuery : IRequest<OperationResult<SearchAuctionsResponse>>
 {
     public AuctionStatus? Status { get; }
     public Guid? VehicleId { get; }

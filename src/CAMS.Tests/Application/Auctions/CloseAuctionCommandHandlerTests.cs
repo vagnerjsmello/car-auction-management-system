@@ -107,7 +107,8 @@ public class CloseAuctionCommandHandlerTests
 
         // Assert
         response.Should().NotBeNull();
-        response.AuctionId.Should().Be(auction.Id);
+        response.IsSuccess.Should().BeTrue();
+        response.Data.AuctionId.Should().Be(auction.Id);        
         auction.Status.Should().Be(AuctionStatus.Closed);
         _auctionRepositoryMock.Verify(r => r.UpdateAsync(It.IsAny<Auction>()), Times.Once);
         _eventPublisherMock.Verify(ep => ep.PublishEventsAsync(auction), Times.Once);
@@ -136,23 +137,25 @@ public class CloseAuctionCommandHandlerTests
     #region Validation Tests
 
     [Fact]
-    public async Task Handle_ShouldThrowValidationException_WhenCommandFailsValidation()
+    public async Task Handle_ShouldReturnFailureResult_WhenValidationFailsForCloseAuctionCommand()
     {
         // Arrange
         var request = new CloseAuctionRequest { AuctionId = Guid.Empty };
         var command = new CloseAuctionCommand(request);
 
         var validationFailure = new ValidationFailure("AuctionId", "AuctionId must not be empty.");
-        var invalidResult = new ValidationResult(new[] { validationFailure });
+        var invalidResult = new ValidationResult(new[] { validationFailure });        
         _validatorMock.Setup(v => v.ValidateAsync(command, It.IsAny<CancellationToken>())).ReturnsAsync(invalidResult);
 
         // Act
-        Func<Task> act = async () => await _handler.Handle(command, CancellationToken.None);
+        var result = await _handler.Handle(command, CancellationToken.None);
 
         // Assert
-        await act.Should().ThrowAsync<ValidationException>().WithMessage("*AuctionId must not be empty*");
+        result.IsSuccess.Should().BeFalse();
+        result.Errors.Should().Contain(e => e.Contains("AuctionId must not be empty"));
         _auctionRepositoryMock.Verify(r => r.UpdateAsync(It.IsAny<Auction>()), Times.Never);
     }
+
 
     [Fact]
     public void Validator_ShouldHaveError_WhenAuctionIdIsEmpty()

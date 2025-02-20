@@ -1,4 +1,5 @@
-﻿using CAMS.Domain.Exceptions;
+﻿using CAMS.Application.Common;
+using CAMS.Domain.Exceptions;
 using CAMS.Domain.Factories;
 using CAMS.Domain.Repositories;
 using FluentValidation;
@@ -11,7 +12,7 @@ namespace CAMS.Application.Commands.Vehicles.CreateVehicle;
 /// <summary>
 /// Handler responsible for processing the creation of a vehicle command.
 /// </summary>
-public class CreateVehicleCommandHandler : IRequestHandler<CreateVehicleCommand, CreateVehicleResponse>
+public class CreateVehicleCommandHandler : IRequestHandler<CreateVehicleCommand, OperationResult<CreateVehicleResponse>>
 {
     private readonly IVehicleRepository _vehicleRepository;
     private readonly IValidator<CreateVehicleCommand> _validator;
@@ -27,7 +28,7 @@ public class CreateVehicleCommandHandler : IRequestHandler<CreateVehicleCommand,
         _validator = validator ?? throw new ArgumentNullException(nameof(validator));
     }
 
-    public async Task<CreateVehicleResponse> Handle(CreateVehicleCommand command, CancellationToken cancellationToken)
+    public async Task<OperationResult<CreateVehicleResponse>> Handle(CreateVehicleCommand command, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Handling CreateVehicleCommand for Vehicle ID: {VehicleId}", command.Id);
 
@@ -36,7 +37,7 @@ public class CreateVehicleCommandHandler : IRequestHandler<CreateVehicleCommand,
         if (!validationResult.IsValid)
         {
             _logger.LogWarning($"Validation failed for {command.GetType().Name}: {validationResult.Errors}");
-            throw new ValidationFailedException(validationResult.Errors);
+            return OperationResult<CreateVehicleResponse>.Fail(validationResult);
         }
 
         // Check for duplicate vehicle
@@ -64,6 +65,6 @@ public class CreateVehicleCommandHandler : IRequestHandler<CreateVehicleCommand,
         await _vehicleRepository.AddAsync(vehicle);
         _logger.LogInformation("Vehicle created successfully with ID: {VehicleId}", command.Id);
 
-        return new CreateVehicleResponse(vehicle);
+        return OperationResult<CreateVehicleResponse>.Success(new CreateVehicleResponse(vehicle));
     }
 }

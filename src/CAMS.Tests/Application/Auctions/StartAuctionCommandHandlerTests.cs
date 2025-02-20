@@ -124,9 +124,10 @@ public class StartAuctionCommandHandlerTests
 
         // Assert
         response.Should().NotBeNull();
-        response.VehicleId.Should().Be(vehicleId);
-        response.StartingBid.Should().Be(startingBid);
-        response.AuctionId.Should().NotBeEmpty();
+        response.IsSuccess.Should().BeTrue();        
+        response.Data.VehicleId.Should().Be(vehicleId);
+        response.Data.StartingBid.Should().Be(startingBid);
+        response.Data.AuctionId.Should().NotBeEmpty();
 
         _auctionRepositoryMock.Verify(r => r.AddAsync(It.IsAny<Auction>()), Times.Once);
         _eventPublisherMock.Verify(ep => ep.PublishEventsAsync(It.IsAny<Auction>()), Times.Once);

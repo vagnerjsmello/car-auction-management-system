@@ -78,10 +78,11 @@ public class GetAuctionQueryHandlerTests
 
         // Assert
         response.Should().NotBeNull();
-        response.AuctionId.Should().Be(auction.Id);
-        response.VehicleId.Should().Be(vehicleId);
-        response.HighestBid.Should().Be(startingBid);
-        response.Status.Should().Be(AuctionStatus.Active);
+        response.IsSuccess.Should().BeTrue();   
+        response.Data.AuctionId.Should().Be(auction.Id);
+        response.Data.VehicleId.Should().Be(vehicleId);
+        response.Data.HighestBid.Should().Be(startingBid);
+        response.Data.Status.Should().Be(AuctionStatus.Active);
     }
 
     [Fact]
@@ -104,10 +105,11 @@ public class GetAuctionQueryHandlerTests
 
         // Assert
         response.Should().NotBeNull();
-        response.AuctionId.Should().Be(auction.Id);
-        response.VehicleId.Should().Be(vehicleId);
-        response.HighestBid.Should().Be(startingBid);
-        response.Status.Should().Be(AuctionStatus.Closed);
+        response.IsSuccess.Should().BeTrue();
+        response.Data.AuctionId.Should().Be(auction.Id);
+        response.Data.VehicleId.Should().Be(vehicleId);
+        response.Data.HighestBid.Should().Be(startingBid);
+        response.Data.Status.Should().Be(AuctionStatus.Closed);
     }
 
     [Fact]

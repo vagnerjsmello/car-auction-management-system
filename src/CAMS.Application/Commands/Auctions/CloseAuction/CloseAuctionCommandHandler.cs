@@ -1,4 +1,6 @@
-﻿using CAMS.Domain.Exceptions;
+﻿using CAMS.Application.Commands.Vehicles.CreateVehicle;
+using CAMS.Application.Common;
+using CAMS.Domain.Exceptions;
 using CAMS.Domain.Repositories;
 using CAMS.Infrastructure.Events;
 using FluentValidation;
@@ -11,7 +13,7 @@ namespace CAMS.Application.Commands.Auctions.CloseAuction;
 /// <summary>
 /// Handles the CloseAuctionCommand logic.
 /// </summary>
-public class CloseAuctionCommandHandler : IRequestHandler<CloseAuctionCommand, CloseAuctionResponse>
+public class CloseAuctionCommandHandler : IRequestHandler<CloseAuctionCommand, OperationResult<CloseAuctionResponse>>
 {
     private readonly IAuctionRepository _auctionRepository;
     private readonly IValidator<CloseAuctionCommand> _validator;
@@ -30,14 +32,14 @@ public class CloseAuctionCommandHandler : IRequestHandler<CloseAuctionCommand, C
         _eventPublisher = eventPublisher ?? throw new ArgumentNullException(nameof(eventPublisher));
     }
 
-    public async Task<CloseAuctionResponse> Handle(CloseAuctionCommand command, CancellationToken cancellationToken)
+    public async Task<OperationResult<CloseAuctionResponse>> Handle(CloseAuctionCommand command, CancellationToken cancellationToken)
     {
 
         ValidationResult validationResult = await _validator.ValidateAsync(command, cancellationToken);
         if (!validationResult.IsValid)
-        {
-            _logger.LogWarning($"Validation failed for {command.GetType().Name}: {validationResult.Errors}");
-            throw new ValidationFailedException(validationResult.Errors);
+        {            
+            _logger.LogWarning($"Validation failed for {command.GetType().Name}: {validationResult.Errors}");            
+            return OperationResult<CloseAuctionResponse>.Fail(validationResult);
         }
 
         _logger.LogInformation($"Closing auction with ID: {command.AuctionId}");
@@ -59,6 +61,6 @@ public class CloseAuctionCommandHandler : IRequestHandler<CloseAuctionCommand, C
 
         _logger.LogInformation($"Auction {auction.Id} closed successfully.");
 
-        return new CloseAuctionResponse(auction.Id);
+        return OperationResult<CloseAuctionResponse>.Success(new CloseAuctionResponse(auction.Id));
     }
 }
