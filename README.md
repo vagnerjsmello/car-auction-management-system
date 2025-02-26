@@ -243,7 +243,7 @@ CAMS.Tests
 - **Custom Exceptions and Validations:**  
   Custom exceptions have been standardised to centralise error messages and simplify error handling. Validations are implemented with **FluentValidation** and tested with **FluentValidation.TestHelper** to ensure data consistency.
 
-  **Notification Pattern**
+- **Notification Pattern**
   Instead of throwing exceptions immediately for validation errors, our system collects errors into an `OperationResult`. This allows all validation errors to be returned together in a single, unified response, making error handling more efficient and user-friendly.
 
 ---
